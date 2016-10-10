@@ -1,0 +1,23 @@
+<ons-page id="examination">
+    <ons-toolbar>
+        <div class="left"><ons-back-button>Back</ons-back-button></div>
+        <div class="center">診察</div>
+    </ons-toolbar>
+    <div style="text-align: center">
+        <h1>診察</h1>
+        <p style="text-align: center;">
+            <p id="question_title">
+                質問
+            </p>
+            <p id="QuestionText"></p>
+            <p id="button_yes_or_on" style="text-align: center;visibility: visible">
+                <button name="yes" value="yes" id="button_yes" onclick="next('yes')">Yes</button>
+                <button name="no" value="no" id="button_no" onclick="next('no')">No</button>
+            </p>
+            <p id="button_show_certificate" style="text-align: center; visibility: hidden">
+                <button onclick="myNavigator.pushPage('certificate.html')">結果表示</button>
+            </p>
+        </p>
+    </div>
+</ons-page>
+
