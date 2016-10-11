@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html ng-app="myApp">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="css/style.css">
     <script>
-        ons.bootstrap();
+        var app = angular.module('myApp',['onsen']);
         ons.disableAutoStatusBarFill();  // (Monaca enables StatusBar plugin by default)
         //Web SQL DataBase　作成
         document.addEventListener("deviceready", onDeviceReady, false);
@@ -46,11 +46,6 @@
         $(document).on('pageinit', '#examination',function(){
             console.log('examinationが初期化された');
             setFirstQuestion();
-        });
-        // page3の初期化を監視
-        $(document).on('pageinit', '#certificate',function(){
-            console.log('certificateが初期化された');
-            getCertificateList();
         });
     </script>
     <script src="js/app.js"></script>

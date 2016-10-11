@@ -1,4 +1,4 @@
-<ons-page id="certificate">
+<ons-page id="certificate" ng-controller="certificateController">
     <ons-toolbar>
         <div class="center">回答</div>
     </ons-toolbar>
@@ -7,7 +7,14 @@
             回答
         </p>
         <p id="certificateText">購入の必要はないと考えます。</p>
+        <!--
         <p id="certificateList" style="text-align: center;visibility: visible"></p>
+        !-->
+        <ons-list id="certificateList" style="text-align: center;visibility: visible">
+            <ons-list-item ng-repeat="data in datalist">
+            {{data.qtxt}} : {{data.ans}}
+            </ons-list-item>
+        </ons-list>
         <p id="certificateJudgement"style="text-align: right;">
             <ons-button id="button_goTop" onclick="registCertificate('Y')">購入する</ons-button>
             <ons-button id="button_goTop" onclick="registCertificate('N')">購入しない</ons-button>

@@ -230,12 +230,6 @@ function setAnswer(yesOrNo){
     answers.push( { qid: nowQID, qtxt: nowQtext ,ans: yesOrNo } );
 };
 
-function getCertificateList(){
-    var listtxt="";
-    for (var a = 0; a < answers.length; a++){
-        console.log(JSON.stringify(answers[a]));
-        listtxt=listtxt+"<li>"+answers[a]['qtxt']+":"+answers[a]['ans']+"</li>";
-    }
-    $("#certificateList").html(listtxt);
-};
-
+app.controller('certificateController',function($scope){
+    $scope.datalist=answers;
+});
