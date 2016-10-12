@@ -4,17 +4,11 @@
     </ons-toolbar>
     <div style="text-align: center">
         <h1>相談窓口</h1>
-        <p>
-            購入を迷っている商品名（例：財布）を入力
+        <p style="text-align: center;">
+            商品名：<input id="productName" value="" type="text" class="text-input" placeholder="商品名を入力"></input>
         </p>
         <p style="text-align: center;">
-            <input id="productName" value="" type="text" class="text-input" placeholder="商品名を入力"></input>
-        </p>
-        <p>
-            商品の金額を入力
-        </p>
-        <p style="text-align: center;">
-            <input id="productCost" value="0" type="number" class="text-input" placeholder="数値" pattern="\d*"></input>
+            金　額：<input id="productCost" value="0" type="number" class="text-input" placeholder="金額を入力" pattern="\d*" style="text-align: right"></input>
         </p>
         <p style="text-align: center;">
             <ons-button id="button_cost_1" onclick="addCost(1)">1</ons-button>
