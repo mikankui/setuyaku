@@ -8,8 +8,6 @@ var answers=[];
 var pcost=0;
 var pname="";
 var datetime="";
-var ProductCostJudgementYes=0
-var ProductCostJudgementNo=0
 var db = window.openDatabase("Database", "1.0", "Questions", 200000);
 //var question={};
 
@@ -120,7 +118,7 @@ function registCertificateQuery(tx){
 // chekc for Certificate
 function getCertificateRecodeList() {
     console.log("show CertificateRecodeList")
-    db.transaction(function(tx){tx.executeSql('SELECT * FROM Certificate', [], getCertificateListRecodeQuery, errorCB);}, errorCB, successCB);
+    db.transaction(function(tx){tx.executeSql('SELECT * FROM Certificate ORDER BY datetime DESC', [], getCertificateListRecodeQuery, errorCB);}, errorCB, successCB);
 }
 function getCertificateListRecodeQuery(tx, results) {
     var len = results.rows.length;
@@ -139,28 +137,28 @@ function getCertificateListRecodeQuery(tx, results) {
 //--------------------------------------------------------------------------------------
 //-------achievement--------------------------------------------------------------------
 //次の質問情報をテーブルから取得し、グローバル変数へ設定。
-function getProductCostJudgementYes(){
-    db.transaction(getProductCostJudgementYesQuery, errorCB, successCB);
-}
-function getProductCostJudgementYesQuery(tx) {
-    tx.executeSql('SELECT SUM(productCost) AS COUNT_YES FROM Certificate WHERE Judgement == ?', ['Y'], 
-    function(tx,res){
-        console.log(res.rows.item(0).COUNT_YES);
-        ProductCostJudgementYes=res.rows.item(0).COUNT_YES;
-        console.log(ProductCostJudgementYes);
-    }, errorCB);
-}
- function getProductCostJudgementNo(){
-    db.transaction(getProductCostJudgementNoQuery, errorCB, successCB);
-}
-function getProductCostJudgementNoQuery(tx) {
-    tx.executeSql('SELECT SUM(productCost) AS COUNT_NO FROM Certificate WHERE Judgement == ?', ['N'], 
-    function(tx,res){
-        console.log(res.rows.item(0).COUNT_NO);
-        ProductCostJudgementNo=res.rows.item(0).COUNT_NO;
-        console.log(ProductCostJudgementNo);
-    }, errorCB);
-}  
+//function getProductCostJudgementYes(){
+//    db.transaction(getProductCostJudgementYesQuery, errorCB, successCB);
+//}
+//function getProductCostJudgementYesQuery(tx) {
+//    tx.executeSql('SELECT SUM(productCost) AS COUNT_YES FROM Certificate WHERE Judgement == ?', ['Y'], 
+//    function(tx,res){
+//        console.log(res.rows.item(0).COUNT_YES);
+//        ProductCostJudgementYes=res.rows.item(0).COUNT_YES;
+//        console.log(ProductCostJudgementYes);
+//    }, errorCB);
+//}
+// function getProductCostJudgementNo(){
+//    db.transaction(getProductCostJudgementNoQuery, errorCB, successCB);
+//}
+//function getProductCostJudgementNoQuery(tx) {
+//    tx.executeSql('SELECT SUM(productCost) AS COUNT_NO FROM Certificate WHERE Judgement == ?', ['N'], 
+//    function(tx,res){
+//        console.log(res.rows.item(0).COUNT_NO);
+//        ProductCostJudgementNo=res.rows.item(0).COUNT_NO;
+//        console.log(ProductCostJudgementNo);
+//    }, errorCB);
+//}  
 //--------------------------------------------------------------------------------------
 //----------SQL for Common-----------------------------------------------------------
 //Callback function when the transaction is failed.
@@ -267,8 +265,58 @@ app.controller('certificateController',function($scope){
 });
 
 app.controller('achievementController',function($scope){
-    getProductCostJudgementYes();
-    getProductCostJudgementNo();
-    $scope.count_no=ProductCostJudgementNo;
-    $scope.count_yes=ProductCostJudgementYes;
+    //-------achievement--------------------------------------------------------------------
+    var ProductCostJudgementYes=0;
+    var ProductCostJudgementNo=0;
+    //http://susunshun.hatenablog.com/entry/2016/06/24/140130
+    var getProductCostJudgement = function (){
+        return new Promise(function(resolve, reject) {
+            // タイムアウト値の設定は任意
+            setTimeout(function(){
+                db.transaction(
+                    function(tx){
+                        tx.executeSql('SELECT SUM(productCost) AS COUNT_YES FROM Certificate WHERE Judgement == ?'
+                        , ['Y']
+                        ,function(tx,res){
+                            ProductCostJudgementYes=res.rows.item(0).COUNT_YES;
+                            console.log('get yes '+ProductCostJudgementYes);
+                        }
+                        ,errorCB);
+                    }, 
+                    errorCB,
+                    successCB
+                );
+
+                db.transaction(
+                    function(tx){
+                        tx.executeSql('SELECT SUM(productCost) AS COUNT_NO FROM Certificate WHERE Judgement == ?'
+                        , ['N']
+                        ,function(tx,res){
+                            ProductCostJudgementNo=res.rows.item(0).COUNT_NO;
+                            $scope.count_no=ProductCostJudgementNo;
+                            console.log('get no '+ProductCostJudgementNo);
+                        }
+                        ,errorCB);
+                    }, 
+                    errorCB,
+                    successCB
+                );
+
+                resolve();
+            },10);
+        });
+    };
+
+    var setScope = function(){
+        return new Promise(function(resolv,reject){
+            setTimeout(function(){
+                console.log("set scope");
+                $scope.count_no=ProductCostJudgementNo;
+                $scope.count_yes=ProductCostJudgementYes;
+                $scope.$apply();
+            },100);
+        });
+    }
+
+    getProductCostJudgement().then(setScope);
 });
