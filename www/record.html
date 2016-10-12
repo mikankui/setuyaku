@@ -1,4 +1,4 @@
-<ons-page id="record">
+<ons-page id="record" ng-controller="recordController">
     <ons-toolbar>
         <div class="left"><ons-back-button>Back</ons-back-button></div>
         <div class="center">相談履歴</div>
@@ -8,9 +8,11 @@
         <p>
         過去の相談履歴リストを表示。有料オプション。
         </p>
-        <p style="text-align: left">
-            <p id="certificateRecordList" style="text-align: left;"></p>
-        </p>
+        <ons-list id="certificateRecordList" style="text-align: left">
+            <ons-list-item ng-repeat="data in datalist">
+            {{data.datetime}}: {{data.productName}}: {{data.productCost}}: {{data.Judgement}}
+            </ons-list-item>
+        </ons-list>
         <ons-button
             onclick="myNavigator.popPage()">
             戻る

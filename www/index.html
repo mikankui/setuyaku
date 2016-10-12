@@ -28,6 +28,8 @@
         // page1の初期化を監視
         $(document).on('pageinit', '#home',function(){
             console.log('homeが初期化された');
+            getProductCostJudgementYes();
+            getProductCostJudgementNo();
         });
         // page2の初期化を監視
         $(document).on('pageinit', '#reception',function(){
@@ -40,7 +42,6 @@
         // page3の初期化を監視
         $(document).on('pageinit', '#record',function(){
             console.log('recordが初期化された');
-            getCertificateRecodeList();
         });
         // page3の初期化を監視
         $(document).on('pageinit', '#examination',function(){
@@ -51,7 +52,7 @@
     <script src="js/app.js"></script>
 </head>
 <body>
-    <ons-navigator id="myNavigator" var="myNavigator" page="home.html">
+    <ons-navigator id="myNavigator" var="myNavigator" page="reception.html">
     </ons-navigator> 
 </body>
 </html>

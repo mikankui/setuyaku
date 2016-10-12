@@ -115,50 +115,6 @@ function registCertificateQuery(tx){
     tx.executeSql('INSERT INTO Certificate (id, datetime, productName, productCost, Judgement) VALUES (?,?,?,?,?)',
     [CertificateID,datetime,pname,pcost,judgement],successCB, errorCB);
 }
-// chekc for Certificate
-function getCertificateRecodeList() {
-    console.log("show CertificateRecodeList")
-    db.transaction(function(tx){tx.executeSql('SELECT * FROM Certificate ORDER BY datetime DESC', [], getCertificateListRecodeQuery, errorCB);}, errorCB, successCB);
-}
-function getCertificateListRecodeQuery(tx, results) {
-    var len = results.rows.length;
-    var listtxt="";
-    for (var i=0; i<len; i++){
-        listtxt=listtxt+"<li>"
-                +" "+results.rows.item(i).id
-                +" :"+results.rows.item(i).datetime
-                +" :"+results.rows.item(i).productName
-                +" :"+results.rows.item(i).productCost
-                +" :"+results.rows.item(i).Judgement
-                +"</li>";
-    }
-    $("#certificateRecordList").html(listtxt);
-}
-//--------------------------------------------------------------------------------------
-//-------achievement--------------------------------------------------------------------
-//次の質問情報をテーブルから取得し、グローバル変数へ設定。
-//function getProductCostJudgementYes(){
-//    db.transaction(getProductCostJudgementYesQuery, errorCB, successCB);
-//}
-//function getProductCostJudgementYesQuery(tx) {
-//    tx.executeSql('SELECT SUM(productCost) AS COUNT_YES FROM Certificate WHERE Judgement == ?', ['Y'], 
-//    function(tx,res){
-//        console.log(res.rows.item(0).COUNT_YES);
-//        ProductCostJudgementYes=res.rows.item(0).COUNT_YES;
-//        console.log(ProductCostJudgementYes);
-//    }, errorCB);
-//}
-// function getProductCostJudgementNo(){
-//    db.transaction(getProductCostJudgementNoQuery, errorCB, successCB);
-//}
-//function getProductCostJudgementNoQuery(tx) {
-//    tx.executeSql('SELECT SUM(productCost) AS COUNT_NO FROM Certificate WHERE Judgement == ?', ['N'], 
-//    function(tx,res){
-//        console.log(res.rows.item(0).COUNT_NO);
-//        ProductCostJudgementNo=res.rows.item(0).COUNT_NO;
-//        console.log(ProductCostJudgementNo);
-//    }, errorCB);
-//}  
 //--------------------------------------------------------------------------------------
 //----------SQL for Common-----------------------------------------------------------
 //Callback function when the transaction is failed.
@@ -279,7 +235,6 @@ app.controller('achievementController',function($scope){
                         , ['Y']
                         ,function(tx,res){
                             ProductCostJudgementYes=res.rows.item(0).COUNT_YES;
-                            console.log('get yes '+ProductCostJudgementYes);
                         }
                         ,errorCB);
                     }, 
@@ -293,8 +248,46 @@ app.controller('achievementController',function($scope){
                         , ['N']
                         ,function(tx,res){
                             ProductCostJudgementNo=res.rows.item(0).COUNT_NO;
-                            $scope.count_no=ProductCostJudgementNo;
-                            console.log('get no '+ProductCostJudgementNo);
+                        }
+                        ,errorCB);
+                    }, 
+                    errorCB,
+                    successCB
+                );
+
+                resolve();
+            },10);
+        });
+    };
+
+    var setScope = function(){
+        return new Promise(function(resolv,reject){
+            setTimeout(function(){
+                $scope.count_no=ProductCostJudgementNo;
+                $scope.count_yes=ProductCostJudgementYes;
+                $scope.$apply();
+            },100);
+        });
+    }
+
+    getProductCostJudgement().then(setScope);
+});
+
+app.controller('recordController',function($scope){
+    var cList=[];
+    var getCertificateRecordList = function (){
+        return new Promise(function(resolve, reject) {
+            // タイムアウト値の設定は任意
+            setTimeout(function(){
+                db.transaction(
+                    function(tx){
+                        tx.executeSql('SELECT * FROM Certificate ORDER BY datetime DESC'
+                        , []
+                        ,function(tx,res){
+                            for (var i=0; i<res.rows.length; i++){
+                                cList.push(res.rows.item(i));
+                            }   
+                            console.log('get data '+res.rows.length);
                         }
                         ,errorCB);
                     }, 
@@ -311,12 +304,12 @@ app.controller('achievementController',function($scope){
         return new Promise(function(resolv,reject){
             setTimeout(function(){
                 console.log("set scope");
-                $scope.count_no=ProductCostJudgementNo;
-                $scope.count_yes=ProductCostJudgementYes;
+                $scope.datalist=cList;
                 $scope.$apply();
             },100);
         });
     }
 
-    getProductCostJudgement().then(setScope);
+    getCertificateRecordList().then(setScope);
+
 });
