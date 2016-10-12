@@ -5,41 +5,45 @@
     </ons-toolbar>
     <div style="text-align: center">
         <h1>相談窓口</h1>
-        <ons-button
-            onclick="myNavigator.popPage()">
-            戻る
-        </ons-button>
         <p>
-            購入を迷っている商品名（例：財布）を入力してください。
+            購入を迷っている商品名（例：財布）を入力
         </p>
         <p style="text-align: center;">
-            <input id="productName" value=""></input>
+            <input id="productName" value="" type="text" class="text-input" placeholder="商品名を入力"></input>
         </p>
         <p>
-            購入を迷っている商品の金額を入力してください。
+            商品の金額を入力
         </p>
         <p style="text-align: center;">
-            <input id="productCost" value="0"></input>
-            <ons-button id="button_cost_clear" onclick="clearCost()">clear</ons-button>
+            <input id="productCost" value="0" type="number" class="text-input" placeholder="数値" pattern="\d*"></input>
         </p>
         <p style="text-align: center;">
-            <button id="button_cost_1" onclick="addCost(1)">1</button>
-            <button id="button_cost_5"onclick="addCost(5)">5</button>
-            <button id="button_cost_10" onclick="addCost(10)">10</button>
+            <ons-button id="button_cost_1" onclick="addCost(1)">1</ons-button>
+            <ons-button id="button_cost_2"onclick="addCost(2)">2</ons-button>
+            <ons-button id="button_cost_3" onclick="addCost(3)">3</ons-button>
         </p>
         <p style="text-align: center;">
-            <button id="button_cost_50" onclick="addCost(50)">50</button>
-            <button id="button_cost_100" onclick="addCost(100)">100</button>
-            <button id="button_cost_500" onclick="addCost(500)">500</button>
+            <ons-button id="button_cost_4" onclick="addCost(4)">4</ons-button>
+            <ons-button id="button_cost_5" onclick="addCost(5)">5</ons-button>
+            <ons-button id="button_cost_6" onclick="addCost(6)">6</ons-button>
         </p>
         <p style="text-align: center;">
-            <button id="button_cost_1000" onclick="addCost(1000)">1000</button>
-            <button id="button_cost_5000" onclick="addCost(5000)">5000</button>
-            <button id="button_cost_10000" onclick="addCost(10000)">10000</button>
+            <ons-button id="button_cost_7" onclick="addCost(7)">7</ons-button>
+            <ons-button id="button_cost_8" onclick="addCost(8)">8</ons-button>
+            <ons-button id="button_cost_9" onclick="addCost(9)">9</ons-button>
+        </p>
+        <p style="text-align: center;">
+            <ons-button id="button_cost_0" onclick="addCost(0)">0</ons-button>
+            <ons-button id="button_cost_00" onclick="addCost('00')">00</ons-button>
+            <ons-button id="button_cost_c" onclick="clearCost()">C</ons-button>
         </p>
         <ons-button
             onclick="myNavigator.pushPage('examination.html')">
             診察開始
+        </ons-button>
+        <ons-button
+            onclick="myNavigator.popPage()">
+            戻る
         </ons-button>
     </div>
 </ons-page>

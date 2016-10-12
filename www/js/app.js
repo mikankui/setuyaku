@@ -8,6 +8,8 @@ var answers=[];
 var pcost=0;
 var pname="";
 var datetime="";
+var ProductCostJudgementYes=0
+var ProductCostJudgementNo=0
 var db = window.openDatabase("Database", "1.0", "Questions", 200000);
 //var question={};
 
@@ -135,6 +137,31 @@ function getCertificateListRecodeQuery(tx, results) {
     $("#certificateRecordList").html(listtxt);
 }
 //--------------------------------------------------------------------------------------
+//-------achievement--------------------------------------------------------------------
+//次の質問情報をテーブルから取得し、グローバル変数へ設定。
+function getProductCostJudgementYes(){
+    db.transaction(getProductCostJudgementYesQuery, errorCB, successCB);
+}
+function getProductCostJudgementYesQuery(tx) {
+    tx.executeSql('SELECT SUM(productCost) AS COUNT_YES FROM Certificate WHERE Judgement == ?', ['Y'], 
+    function(tx,res){
+        console.log(res.rows.item(0).COUNT_YES);
+        ProductCostJudgementYes=res.rows.item(0).COUNT_YES;
+        console.log(ProductCostJudgementYes);
+    }, errorCB);
+}
+ function getProductCostJudgementNo(){
+    db.transaction(getProductCostJudgementNoQuery, errorCB, successCB);
+}
+function getProductCostJudgementNoQuery(tx) {
+    tx.executeSql('SELECT SUM(productCost) AS COUNT_NO FROM Certificate WHERE Judgement == ?', ['N'], 
+    function(tx,res){
+        console.log(res.rows.item(0).COUNT_NO);
+        ProductCostJudgementNo=res.rows.item(0).COUNT_NO;
+        console.log(ProductCostJudgementNo);
+    }, errorCB);
+}  
+//--------------------------------------------------------------------------------------
 //----------SQL for Common-----------------------------------------------------------
 //Callback function when the transaction is failed.
 function errorCB(err) {
@@ -153,8 +180,13 @@ function successCB() {
 //******************reception******************
 function addCost(money){
     var cost = $("#productCost").val();
-    console.log(cost);
-    var total = parseInt(cost) + parseInt(money);
+    if(cost==="0"){
+        if(money==="00"){
+            money="0";
+        }
+        cost="";
+    }
+    var total = cost + money;
     $("#productCost").val(total);
 };
 
@@ -232,4 +264,11 @@ function setAnswer(yesOrNo){
 
 app.controller('certificateController',function($scope){
     $scope.datalist=answers;
+});
+
+app.controller('achievementController',function($scope){
+    getProductCostJudgementYes();
+    getProductCostJudgementNo();
+    $scope.count_no=ProductCostJudgementNo;
+    $scope.count_yes=ProductCostJudgementYes;
 });
