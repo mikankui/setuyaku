@@ -8,8 +8,9 @@
             商品名：<input id="productName" value="" type="text" class="text-input" placeholder="商品名を入力"></input>
         </p>
         <p style="text-align: center;">
-            金　額：<input id="productCost" value="0" type="number" class="text-input" placeholder="金額を入力" pattern="\d*" style="text-align: right"></input>
+            金　額：<input id="productCost" value="" type="number" class="text-input" placeholder="金額を入力" pattern="\d*" style="text-align: right"></input>
         </p>
+        <!--
         <p style="text-align: center;">
             <ons-button id="button_cost_1" onclick="addCost(1)">1</ons-button>
             <ons-button id="button_cost_2"onclick="addCost(2)">2</ons-button>
@@ -30,13 +31,10 @@
             <ons-button id="button_cost_00" onclick="addCost('00')">00</ons-button>
             <ons-button id="button_cost_c" onclick="clearCost()">C</ons-button>
         </p>
+        !-->
         <ons-button
             onclick="myNavigator.pushPage('examination.html')">
             診察開始
-        </ons-button>
-        <ons-button
-            onclick="myNavigator.pushPage('home.html')"">
-            戻る
         </ons-button>
     </div>
 </ons-page>

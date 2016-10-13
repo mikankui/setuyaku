@@ -14,11 +14,6 @@
         function onDeviceReady() {
             var db = window.openDatabase("database", "1.0", "testdatabase", 1000000);
         }
-        //Web SQL DataBase　作成チェック
-        //document.addEventListener("deviceready", onDeviceReady, false);
-        //function onDeviceReady() {
-        //    window.alert("Create a database and display the content");
-        //}
         //テーブル作成
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
@@ -28,8 +23,6 @@
         // page1の初期化を監視
         $(document).on('pageinit', '#home',function(){
             console.log('homeが初期化された');
-            getProductCostJudgementYes();
-            getProductCostJudgementNo();
         });
         // page2の初期化を監視
         $(document).on('pageinit', '#reception',function(){
@@ -52,7 +45,20 @@
     <script src="js/app.js"></script>
 </head>
 <body>
-    <ons-navigator id="myNavigator" var="myNavigator" page="reception.html">
-    </ons-navigator> 
+    <ons-tabbar var="tabbar">
+        <ons-tabbar-item
+            icon="comment"
+            label="相談"
+            page="home.html"
+            active="true"></ons-tabbar-item>
+        <ons-tabbar-item
+            icon="yen"
+            label="達成度"
+            page="achievement.html"></ons-tabbar-item>
+        <ons-tabbar-item
+            icon="list"
+            label="相談履歴"
+            page="record.html"></ons-tabbar-item>
+    </ons-tabbar>
 </body>
 </html>
