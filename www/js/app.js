@@ -256,7 +256,7 @@ app.controller('achievementController',function($scope){
                 );
 
                 resolve();
-            },30);
+            },100);
         });
     };
 
@@ -266,7 +266,7 @@ app.controller('achievementController',function($scope){
                 $scope.count_no=ProductCostJudgementNo;
                 $scope.count_yes=ProductCostJudgementYes;
                 $scope.$apply();
-            },30);
+            },100);
         });
     }
 
@@ -296,7 +296,7 @@ app.controller('recordController',function($scope){
                 );
 
                 resolve();
-            },10);
+            },100);
         });
     };
 
