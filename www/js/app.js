@@ -3,6 +3,7 @@
 var nowQID="";
 var nowQtext="";
 var nextQID=1;
+var yesOrNo="Y";
 var CertificateID=0;
 var answers=[];
 var pcost=0;
@@ -16,65 +17,125 @@ function createDB(){
     db.transaction(createTabels, errorCB, successCB);
 } 
 function createTabels(tx){
-    tx.executeSql('DROP TABLE Certificate',[]);
-    //tx.executeSql('DELETE * FROM Certificate');
+    tx.executeSql('DROP TABLE IF EXISTS Questions');
     tx.executeSql('CREATE TABLE IF NOT EXISTS Certificate (id unique, datetime, productName, productCost, Judgement)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS CertificateDetails (CertificateId , questionNo, answer)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS Questions(id unique, questionText, nextQuextionId)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Questions (id unique, questionText, nextQuestionIdYes ,nextQuestionIdNo)');
     //Questionsマスタデータ登録
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (1, "今すぐ必要ですか？", 2)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (2, "代替品はありますか？", 3)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (3, "レンタルや借用は可能ですか？", 4)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (4, "利用頻度は高いですか？", 5)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (5, "日用品ですか？嗜好品ですか？", 6)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (6, "３年以上利用しますか？", 7)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (7, "同じ機能をもつ商品との比較を行いましたか？", 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuextionId) VALUES (8, "衝動買いですか？", "")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (1, "今すぐ必要ですか？", 2, 8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (2, "代替品はありますか？", 3, 8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (3, "レンタルや借用は可能ですか？", 4, 8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (4, "利用頻度は高いですか？", 5 ,8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (5, "日用品ですか？嗜好品ですか？", 6, 8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (6, "３年以上利用しますか？", 7, 8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (7, "同じ機能をもつ商品との比較を行いましたか？", 8, 8)');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (8, "衝動買いですか？", "" ,"" )');
 }
 
 //----------SQL for Questions-----------------------------------------------------------
 //次の質問情報をテーブルから取得し、グローバル変数へ設定。
-function getQuestion(){
-    db.transaction(getQuestionQuery, errorCB, successCB);
+function getNowQuestion(){
+    db.transaction(getNowQuestionQuery, errorCB, successCB);    
 }
-function getQuestionQuery(tx) {
-    if(nowQID===""){
-        nextQID=1;
-    }
-    if(nextQID===""){
-        //質問完了。診断結果を表示。
-        showCertificate();
-    }else{
-        //質問を取得し、
-        tx.executeSql('SELECT * FROM Questions WHERE id == ?', [nextQID], 
-        function(tx,res){
-            console.log(res.rows.item(0).id);
-            if(res.rows.length===0){
-                //質問が存在しない。Questionsマスタデータ不正。
-                console.log("getQuestion return zero question. Questions's Table date fails.");
-            }else if(res.rows.length>1){
-                //質問が複数は存在しない。Questionsマスタデータ不正。
-                console.log("getQuestion return more than one question. Questions's Table date fails.");
-            }else{
-                //グローバル変数へ設定
-                nowQID=res.rows.item(0).id;
-                nowQtext=res.rows.item(0).questionText;
-                nextQID=res.rows.item(0).nextQuextionId;
-                showQuestion();
-            }
-        }, errorCB);
-    }
+function getNowQuestionQuery(tx) {
+    //質問を取得
+    tx.executeSql('SELECT * FROM Questions WHERE id == ?', [nowQID], 
+    function(tx,res){
+        if(res.rows.length===0){
+            //質問が存在しない。Questionsマスタデータ不正。
+            console.log("getQuestion return zero question. Questions's Table date fails.");
+        }else if(res.rows.length>1){
+            //質問が複数は存在しない。Questionsマスタデータ不正。
+            console.log("getQuestion return more than one question. Questions's Table date fails.");
+        }else{
+            //グローバル変数へ設定
+            nowQtext=res.rows.item(0).questionText;
+            showQuestion();
+        }
+    }, errorCB);
 }
-// chekc for Questions
-function queryDB() {
-    db.transaction(function(tx){tx.executeSql('SELECT * FROM Questions', [], querySuccess, errorCB);}, errorCB, successCB);
-}
-function querySuccess(tx, results) {
-    var len = results.rows.length;
-    window.alert("There are " + len + " rows of records in the database.");
-    for (var i=0; i<len; i++){
-        document.writeln("row = " + i + " ID = " + results.rows.item(i).id + " Data = " + results.rows.item(i).questionText+"<br/>");
-    }        
+function getNextQuestion(){
+    //現在の質問の回答から、次の質問番号を取得
+    var getNextQID = function(){
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                db.transaction(
+                    function(tx){
+                        tx.executeSql('SELECT * FROM Questions WHERE id == ?', [nowQID], 
+                            function(tx,res){
+                                if(res.rows.length===0){
+                                    //質問が存在しない。Questionsマスタデータ不正。
+                                    console.log("getQuestion return zero question. Questions's Table date fails.");
+                                }else if(res.rows.length>1){
+                                    //質問が複数は存在しない。Questionsマスタデータ不正。
+                                    console.log("getQuestion return more than one question. Questions's Table date fails.");
+                                }else{
+                                    //グローバル変数へ設定
+                                    if(yesOrNo==='Y'){
+                                        nextQID=res.rows.item(0).nextQuestionIdYes;
+                                    }else{
+                                        nextQID=res.rows.item(0).nextQuestionIdNo;
+                                    }
+                                }
+                            } 
+                        ,errorCB);
+                    }, 
+                    errorCB,
+                    successCB
+                );
+                resolve();
+            }, 10);
+        });
+    };
+
+    var setNextQID = function(tx){
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                db.transaction(
+                    function(tx){
+                        //取得した質問番号から、質問文を取得
+                        if(nextQID===""){
+                            //質問完了。診断結果を表示。
+                            showCertificate();
+                        }else{
+                            tx.executeSql('SELECT * FROM Questions WHERE id == ?', [nextQID], 
+                            function(tx,res){
+                                if(res.rows.length===0){
+                                    //質問が存在しない。Questionsマスタデータ不正。
+                                    console.log("getQuestion return zero question. Questions's Table date fails.");
+                                }else if(res.rows.length>1){
+                                    //質問が複数は存在しない。Questionsマスタデータ不正。
+                                    console.log("getQuestion return more than one question. Questions's Table date fails.");
+                                }else{
+                        //console.log("getQuestionQuery-berore------------------------");
+                        //console.log("nowQID"+nowQID);
+                        //console.log("nowQtext"+nowQtext);
+                        //console.log("yesOrNo :"+yesOrNo)
+                        //console.log("nextID: "+nextQID);
+                        //console.log("-------------------------");
+                                    //グローバル変数へ設定
+                                    nowQID=res.rows.item(0).id;
+                                    nowQtext=res.rows.item(0).questionText;
+                        //console.log("getQuestionQuery-after------------------------");
+                        //console.log("nowQID"+nowQID);
+                        //console.log("nowQtext"+nowQtext);
+                        //console.log("yesOrNo :"+yesOrNo)
+                        //console.log("nextID: "+nextQID);
+                        //console.log("-------------------------");
+                                    showQuestion();
+                                }
+                            }, 
+                            errorCB);
+                        }
+                    }, 
+                    errorCB,
+                    successCB
+                );
+                resolve();
+            }, 10);
+    });
+    };
+    getNextQID().then(setNextQID);
 }
 //--------------------------------------------------------------------------------------
 //----------SQL for Certificate-----------------------------------------------------------
@@ -86,7 +147,6 @@ function getCertificateIDQuery(tx){
     //件数確認
     tx.executeSql('SELECT id FROM Certificate', [], 
     function(tx,res){
-        console.log('SELECT id FROM Certificate: '+res.rows.length);
         if(res.rows.length===0){
             //データが存在しない場合、1を指定
             CertificateID=1;
@@ -104,9 +164,7 @@ function getCertificateIDQuery(tx){
 //Certificateへデータを登録する
 function registCertificate(judge_YorN){
     judgement=judge_YorN;
-    console.log("judgement:"+judgement);
     getCertificateID();
-    console.log("CertificateID:"+CertificateID);
     db.transaction(registCertificateQuery, errorCB, successCB);
     showBackHome();
 }
@@ -128,9 +186,6 @@ function successCB() {
 }
 //--------------------------------------------------------------------------------------
 
-
-
-
 //******************reception******************
 function addCost(money){
     var cost = $("#productCost").val();
@@ -150,15 +205,19 @@ function clearCost(){
 //*********************************************
 
 function setFirstQuestion(){
-    nowQID="";
-    nowQtext="";
-    nextQID=1;
+    nowQID=1;
     answers=[];
     pcost = $("#productCost").val();
     pname = $("#productName").val();
     getCertificateID();
     getDatetime();
-    getQuestion();
+    getNowQuestion();
+    //console.log("setFirst-------------------------");
+    //console.log("nowQID"+nowQID);
+    //console.log("nowQtext"+nowQtext);
+    //console.log("yesOrNo :"+yesOrNo)
+    //console.log("nextID: "+nextQID);
+    //console.log("-------------------------");
 };
 
 function getDatetime(){
@@ -176,16 +235,14 @@ function getDatetime(){
     datetime = year + "/" + month + "/" + date + " " + hour + ":" + minute + ":" + second;
 }
 
-function next(yesOrNo){
-    setAnswer(yesOrNo);
-    //getNextQuestion();
-    getQuestion();
-    console.log(nowQID+":"+nowQtext+":"+nextQID);
+function next(judgement){
+    setAnswer(judgement);
+    yesOrNo=judgement;
+    getNextQuestion();
 }
 
 //質問を更新
 function showQuestion(){
-    console.log(nowQtext);
     $("#QuestionText").html(nowQtext);
 }
 //診断結果表示画面へ
@@ -312,4 +369,41 @@ app.controller('recordController',function($scope){
 
     getCertificateRecordList().then(setScope);
 
+});
+
+app.controller('settingController',function($scope){
+    var cList=[];
+    var getQuestionList = function (){
+        return new Promise(function(resolve, reject) {
+            // タイムアウト値の設定は任意
+            setTimeout(function(){
+                db.transaction(
+                    function(tx){
+                        tx.executeSql('SELECT * FROM Questions'
+                        , []
+                        ,function(tx,res){
+                            for (var i=0; i<res.rows.length; i++){
+                                cList.push(res.rows.item(i));
+                            }   
+                        }
+                        ,errorCB);
+                    }, 
+                    errorCB,
+                    successCB
+                );
+                resolve();
+            },100);
+        });
+    };
+
+    var setScope = function(){
+        return new Promise(function(resolv,reject){
+            setTimeout(function(){
+                $scope.datalist=cList;
+                $scope.$apply();
+            },10);
+        });
+    }
+
+    getQuestionList().then(setScope);
 });
