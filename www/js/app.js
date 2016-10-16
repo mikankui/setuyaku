@@ -4,6 +4,7 @@ var nowQID="";
 var nowQtext="";
 var nextQID=1;
 var yesOrNo="Y";
+var resultAnswer="";
 var CertificateID=0;
 var answers=[];
 var pcost=0;
@@ -20,16 +21,45 @@ function createTabels(tx){
     tx.executeSql('DROP TABLE IF EXISTS Questions');
     tx.executeSql('CREATE TABLE IF NOT EXISTS Certificate (id unique, datetime, productName, productCost, Judgement)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS CertificateDetails (CertificateId , questionNo, answer)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS Questions (id unique, questionText, nextQuestionIdYes ,nextQuestionIdNo)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS Questions (id unique, questionText, nextQuestionIdYes ,nextQuestionIdNo, resultAnswer)');
     //Questionsマスタデータ登録
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (1, "今すぐ必要ですか？", 2, 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (2, "代替品はありますか？", 3, 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (3, "レンタルや借用は可能ですか？", 4, 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (4, "利用頻度は高いですか？", 5 ,8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (5, "日用品ですか？嗜好品ですか？", 6, 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (6, "３年以上利用しますか？", 7, 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (7, "同じ機能をもつ商品との比較を行いましたか？", 8, 8)');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo) VALUES (8, "衝動買いですか？", "" ,"" )');
+    //1
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (1, "自己投資（書籍購入/ワークショップ参加）ですか？", 2,8,"")');
+      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (2, "１回だけの出費ですか？",3,6,"")');
+        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (3, "自分の意志でなく、付き合いでの出費ですか？","",4,"購入ＮＧです。自分の意志でなく無駄な出費です。")');
+　　      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (4, "生涯可処分所得（生涯賃金）の何％か考えましたか？",5,"","購入ＮＧです。購入額の妥当性を検討しましょう。")');
+　　        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (5, "いつまでに、どうするか、目的は明確ですか？",999,"","購入ＮＧです。目的を明確にしましょう。")');
+        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (6, "総額が、生涯可処分所得（生涯賃金）の何％か考えましたか？",7,"","購入ＮＧです。購入額の妥当性を検討しましょう。")');
+　　      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (7, "いつまでに、どうするか、目的は明確ですか？",999,"","購入ＮＧです。目的を明確にしましょう。")');
+    //2
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (8, "冠婚葬祭、または誰かへのプレゼントですか？", 9, 11,"")');
+      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (9, "予算内ですか？", "", 10,"購入ＮＧです。予算に収めましょう。")');
+        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (10, "プレゼントの名目で自分の購買欲を満たしていませんか？", "" ,999, "購入ＮＧです。購買欲をコントロールしましょう。")');
+
+    //3
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (11, "生活必需品ですか？", 12, 16,"")');
+      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (12, "ストックが家にあるか確認しましたか？", 13, 15,"")');
+        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (13, "必要な量ですか？消費期限以内で使い切れますか？", 14, "","購入ＮＧです。必要な量を購入しましょう。")');
+          tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (14, "類似商品での比較検討は行いましたか？", 999, "","購入ＮＧです。比較検討を行いましょう。")');
+      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (15, "今すぐ必要ですか？", 16, 19,"")');
+        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (16, "消費期限以内で使い切れますか？", 17, "","購入ＮＧです。使い切れる量を購入しましょう。")');
+          tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (17, "以前、同じ商品を破棄したことはありますか？", "",18,"購入ＮＧです。再度、購入量を検討しましょう。")');
+            tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (18, "類似商品での比較検討は行いましたか？", 999, "","購入ＮＧです。比較検討を行いましょう。")');
+        tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (19, "いつか使用すると考えての購入ですか？", "", "","購入ＮＧです。今すぐ必要か、ストックかが曖昧です。")');
+    //4
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (20, "今すぐ必要ですか？", 20, 20,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (21, "付き合いでの購入ではありませんか？", 21, 21,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (22, "２年以上使いますか？", 22, 22,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (23, "減価償却の期間を検討しましたか？", 23, 23,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (24, "利用頻度は高い（週に１回は使用）ですか？", 24, 24,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (25, "利用する上での必須機能を熟慮してますか？", 25, 25,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (26, "予算オーバーですか？", 26, 26,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (27, "予算オーバー分は３カ月の生活費でリカバリ可能ですか？", 27, 27,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (28, "類似商品での比較検討は行いましたか？", 28, 28,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (29, "中古品／未使用品の購入は検討しましたか？", 29, 29,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (30, "セールでの衝動買いではありませんか？", 30, 30,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (31, "限定品での衝動買いではありませんか？", 31, 31,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (32, "捨てる時のことを考慮しましたか？", "", "","購入ＮＧです。本当に必要か、今一度、検討しましょう。")');  
 }
 
 //----------SQL for Questions-----------------------------------------------------------
@@ -54,6 +84,7 @@ function getNowQuestionQuery(tx) {
         }
     }, errorCB);
 }
+
 function getNextQuestion(){
     //現在の質問の回答から、次の質問番号を取得
     var getNextQID = function(){
@@ -73,8 +104,10 @@ function getNextQuestion(){
                                     //グローバル変数へ設定
                                     if(yesOrNo==='Y'){
                                         nextQID=res.rows.item(0).nextQuestionIdYes;
+                                        resultAnswer=res.rows.item(0).resultAnswer;
                                     }else{
                                         nextQID=res.rows.item(0).nextQuestionIdNo;
+                                        resultAnswer=res.rows.item(0).resultAnswer;
                                     }
                                 }
                             } 
@@ -94,6 +127,12 @@ function getNextQuestion(){
                 db.transaction(
                     function(tx){
                         //取得した質問番号から、質問文を取得
+                        if(nextQID===999){
+                            //質問完了。診断結果を表示。
+                            resultAnswer="購入ＯＫです。";
+                            console.log(resultAnswer)
+                            showCertificate();
+                        }
                         if(nextQID===""){
                             //質問完了。診断結果を表示。
                             showCertificate();
@@ -207,6 +246,7 @@ function clearCost(){
 function setFirstQuestion(){
     nowQID=1;
     answers=[];
+    resultAnswer="";
     pcost = $("#productCost").val();
     pname = $("#productName").val();
     getCertificateID();
@@ -274,6 +314,8 @@ function setAnswer(yesOrNo){
 };
 
 app.controller('certificateController',function($scope){
+    $scope.result=resultAnswer;
+    console.log(resultAnswer)
     $scope.datalist=answers;
 });
 
