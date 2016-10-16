@@ -37,7 +37,7 @@ function createTabels(tx){
         tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (10, "プレゼントの名目で自分の購買欲を満たしていませんか？", "" ,999, "購入ＮＧです。購買欲をコントロールしましょう。")');
 
     //3
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (11, "生活必需品ですか？", 12, 16,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (11, "生活必需品ですか？", 12, 20,"")');
       tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (12, "ストックが家にあるか確認しましたか？", 13, 15,"")');
         tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (13, "必要な量ですか？消費期限以内で使い切れますか？", 14, "","購入ＮＧです。必要な量を購入しましょう。")');
           tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (14, "類似商品での比較検討は行いましたか？", 999, "","購入ＮＧです。比較検討を行いましょう。")');
@@ -47,19 +47,19 @@ function createTabels(tx){
             tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (18, "類似商品での比較検討は行いましたか？", 999, "","購入ＮＧです。比較検討を行いましょう。")');
         tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (19, "いつか使用すると考えての購入ですか？", "", "","購入ＮＧです。今すぐ必要か、ストックかが曖昧です。")');
     //4
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (20, "今すぐ必要ですか？", 20, 20,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (21, "付き合いでの購入ではありませんか？", 21, 21,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (22, "２年以上使いますか？", 22, 22,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (23, "減価償却の期間を検討しましたか？", 23, 23,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (24, "利用頻度は高い（週に１回は使用）ですか？", 24, 24,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (25, "利用する上での必須機能を熟慮してますか？", 25, 25,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (26, "予算オーバーですか？", 26, 26,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (27, "予算オーバー分は３カ月の生活費でリカバリ可能ですか？", 27, 27,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (28, "類似商品での比較検討は行いましたか？", 28, 28,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (29, "中古品／未使用品の購入は検討しましたか？", 29, 29,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (30, "セールでの衝動買いではありませんか？", 30, 30,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (31, "限定品での衝動買いではありませんか？", 31, 31,"")');
-    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (32, "捨てる時のことを考慮しましたか？", "", "","購入ＮＧです。本当に必要か、今一度、検討しましょう。")');  
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (20, "今すぐ必要ですか？", 21, 21,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (21, "付き合いでの購入ですか？", "", 22,"購入ＮＧです。付き合いで無駄遣いはやめましょう。")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (22, "２年以上使いますか？", 23, 23,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (23, "１カ月にい１回は利用しますか？", 24, 24,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (24, "利用期間と利用頻度が金額に見合っているか検証済みですか？", 25, "","購入ＮＧです。金額が利用期間と頻度に合っているか検討しましょう。")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (25, "予算オーバーですか？", 26, 27,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (26, "予算オーバー分は３カ月の生活費でリカバリ可能ですか？", 27, "","購入ＮＧです。予算内での購入を検討しましょう。")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (27, "類似商品での比較検討は行いましたか？", 28, 28,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (28, "中古品／未使用品の購入は検討しましたか？", 29, 29,"")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (29, "利用する上での必須機能を熟慮してますか？", 30, "","購入ＮＧです。必須機能を整理し、類似商品や中古/未使用品と比較しましょう。")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (30, "セールでの衝動買いですか？", "", 31,"購入ＮＧです。本当に必要か再度検討しましょう。")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (31, "限定品での衝動買いですか？", "", 32,"購入ＮＧです。本当に必要か再度検討しましょう。")');
+    tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (32, "捨てる時のことを考慮しましたか？", "", "","購入ＮＧです。本当に必要か、浪費でないか、再度検討しましょう。")');  
 }
 
 //----------SQL for Questions-----------------------------------------------------------
