@@ -33,7 +33,7 @@ function createTabels(tx){
 　　      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (7, "いつまでに、どうするか、目的は明確ですか？",999,"","購入ＮＧです。目的を明確にしましょう。")');
     //2
     tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (8, "冠婚葬祭、または誰かへのプレゼントですか？", 9, 11,"")');
-      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (9, "予算内ですか？", "", 10,"購入ＮＧです。予算に収めましょう。")');
+      tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (9, "予算内ですか？", 10, "","購入ＮＧです。予算に収めましょう。")');
         tx.executeSql('INSERT INTO Questions (id, questionText, nextQuestionIdYes, nextQuestionIdNo, resultAnswer) VALUES (10, "プレゼントの名目で自分の購買欲を満たしていませんか？", "" ,999, "購入ＮＧです。購買欲をコントロールしましょう。")');
 
     //3
